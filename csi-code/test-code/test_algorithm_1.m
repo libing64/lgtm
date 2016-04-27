@@ -42,7 +42,7 @@
     };
     
 
-    data_file = data_files{1}
+    data_file = data_files{2}
 
 
     fprintf('Testing Algorithm 1\n')
@@ -62,7 +62,7 @@
     ylabel('Unwrapped CSI Phase')
     title('Unmodified CSI Phase')
 
-    n = 2;%length(csi_trace);
+    n = 10;%length(csi_trace);
     for i = 1 : n
 
         csi_entry = csi_trace{i};
@@ -71,9 +71,7 @@
         csi = csi(1, :, :);
         % Remove the single element dimension
         csi = squeeze(csi);
-        if  i == 1
-            csi_1 = csi;
-        end
+
         csi_phase = unwrap(angle(csi), pi, 2);
         plot(1:1:30, csi_phase(1, :), '-k')
         plot(1:1:30, csi_phase(2, :), '-r')
@@ -97,18 +95,70 @@
         % Remove the single element dimension
         csi = squeeze(csi);
 
+        if  i == 1
+            csi_1 = csi;
+        end
+
         % [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f);
+
+
+        % if i == 1
+        %     [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f);
+        % else 
+        %     [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f, unwrap(angle(csi_1), pi, 2));
+        % end
+
+        % dp = angle( csi_1(1, 1) ) - angle(csi(1, 1));
+        dp = angle( csi_1(:, 1) ) - angle(csi(:, 1));
+
         if i == 1
             [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f);
         else 
-            [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f, unwrap(angle(csi_1), pi, 2));
+            % [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f, unwrap(angle(csi_1), pi, 2));
+            [modified_csi, phase_matrix] = spotfi_algorithm_1(csi, delta_f);
         end
         modified_csi_phase = unwrap(angle(modified_csi), pi, 2);
+        modified_csi_phase = modified_csi_phase + repmat(dp, 1, 30);
         plot(1:1:30, modified_csi_phase(1, :), '-k')
         plot(1:1:30, modified_csi_phase(2, :), '-r')
         plot(1:1:30, modified_csi_phase(3, :), '-g')
+
     end
 
+    grid on;
+    hold off;
+
+
+
+    %todo, it seems that the relative phase of antenna2 and antenna3 is the same? why?
+    %relative phase is right, just the scale is different
+    % relateive CSI Phase
+    figure('Name', 'relative phase', 'NumberTitle', 'off')
+    hold on   
+
+    for i = 1 : n
+        % Get CSI for the first packet
+        csi_entry = csi_trace{i};
+        csi = get_scaled_csi(csi_entry);
+
+        % Only consider CSI from transmission on 1 antenna
+        csi = csi(1, :, :);
+        % Remove the single element dimension
+        csi = squeeze(csi);
+        
+        csi_1 = csi(1, :);
+        csi_2 = csi(2, :);
+        csi_3 = csi(3, :);
+        r12 = csi_2.*conj(csi_1);
+        r23 = csi_3.*conj(csi_2);
+
+        relative_csi_phase_1 = angle(r12);
+        relative_csi_phase_2 = angle(r23);
+
+        plot(1:1:30, relative_csi_phase_1, '-k')
+        plot(1:1:30, relative_csi_phase_2, '-r')
+    end
+    axis([0 30 -pi pi])
     grid on;
     hold off;
 
