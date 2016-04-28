@@ -79,7 +79,7 @@ function globals_init
     DEBUG_PATHS = false;
     DEBUG_PATHS_LIGHT = false;
     NUMBER_OF_PACKETS_TO_CONSIDER = -1; % Set to -1 to ignore this variable's value
-    DEBUG_BRIDGE_CODE_CALLING = false;
+    DEBUG_BRIDGE_CODE_CALLING = true;
     
     % Output controls
     global OUTPUT_AOAS
@@ -295,5 +295,6 @@ function test_algorithm_1(data_file)
             'Antenna 1, Packet 2', 'Antenna 2, Packet 2', 'Antenna 3, Packet 2')
     grid on
     hold off
+    pause(0.5)
     return
 end

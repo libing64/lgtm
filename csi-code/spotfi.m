@@ -505,8 +505,8 @@ function globals_init
     OUTPUT_TOF_MUSIC_PEAK_GRAPH = false;
     OUTPUT_AOA_TOF_MUSIC_PEAK_GRAPH = false;
     OUTPUT_SELECTIVE_AOA_TOF_MUSIC_PEAK_GRAPH = false;
-    OUTPUT_AOA_VS_TOF_PLOT = false;
-    OUTPUT_SUPPRESSED = true;
+    OUTPUT_AOA_VS_TOF_PLOT = true;
+    OUTPUT_SUPPRESSED = false;
     OUTPUT_PACKET_PROGRESS = false;
     OUTPUT_FIGURES_SUPPRESSED = false; % Set to true when running in deployment from command line
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -887,7 +887,7 @@ function [csi_matrix, phase_matrix] = spotfi_algorithm_1(csi_matrix, delta_f, pa
     for m = 1:size(phase_matrix, 1)
         for n = 1:size(phase_matrix, 2)
             % Subtract the phase added from sampling time offset (STO)
-            phase_matrix(m, n) = packet_one_phase_matrix(m, n) + (2 * pi * delta_f * (n - 1) * tau);
+            phase_matrix(m, n) = packet_one_phase_matrix(m, n) + (2 * pi * delta_f * (n - 1) * tau);%todo
         end
     end
     
