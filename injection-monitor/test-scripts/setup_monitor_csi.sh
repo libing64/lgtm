@@ -23,8 +23,8 @@ sleep $SLEEP_TIME
 echo "Killing the notorious wpa_supplicant"
 killall wpa_supplicant
 sleep $SLEEP_TIME
-echo "Bringing wlan0 (default interface) down...."
-ifconfig wlan0 down
+echo "Bringing $WLAN_INTERFACE (default interface) down...."
+ifconfig $WLAN_INTERFACE down
 sleep $SLEEP_TIME
 echo "Setting channel to monitor on $WLAN_INTERFACE to $1 $2" 
 iw dev $WLAN_INTERFACE set channel $1 $2
